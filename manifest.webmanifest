@@ -1,0 +1,19 @@
+{
+  "name": "Mestar Eng — SRS",
+  "short_name": "Mestar Eng",
+  "description": "App học từ vựng cá nhân theo chu kỳ giãn cách",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

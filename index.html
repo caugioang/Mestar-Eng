@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#000000" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  <meta name="apple-mobile-web-app-title" content="Mestar Eng" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" href="icon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="icon.svg" />
+  <title>Mestar Eng — SRS 10d / 30d</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <!-- Top minimal navigation -->
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-dot" aria-hidden="true"></span>
+        <span class="brand-name">Mestar Eng</span>
+      </div>
+      <nav class="nav-tabs" role="tablist" aria-label="Điều hướng chính">
+        <button id="tab-study" class="nav-tab active" role="tab" aria-selected="true" data-view="study">
+          Học
+        </button>
+        <button id="tab-manage" class="nav-tab" role="tab" aria-selected="false" data-view="manage">
+          Kho từ
+        </button>
+      </nav>
+    </header>
+
+    <!-- VIEW 1: STUDY SCREEN -->
+    <main id="view-study" class="view active" role="tabpanel" aria-labelledby="tab-study">
+      <!-- Quota & Session Progress Bar (read-only on study screen) -->
+      <section class="session-bar" aria-label="Tiến độ phiên học hôm nay">
+        <div class="quota-group">
+          <div class="quota-pill" title="Số từ mới còn lại / Quota từ mới mỗi ngày">
+            <span class="quota-label">Mới:</span>
+            <span id="stat-new-remaining" class="quota-value">0</span>
+            <span class="quota-sep">/</span>
+            <span id="stat-new-quota" class="quota-total">30</span>
+          </div>
+          <div class="quota-pill" title="Số từ ôn còn lại / Quota ôn mỗi ngày">
+            <span class="quota-label">Ôn:</span>
+            <span id="stat-review-remaining" class="quota-value">0</span>
+            <span class="quota-sep">/</span>
+            <span id="stat-review-quota" class="quota-total">20</span>
+          </div>
+        </div>
+
+        <div class="session-controls">
+          <button id="btn-undo" class="icon-btn hidden" type="button" title="Hoàn tác thao tác vừa rồi (Z)" aria-label="Hoàn tác">
+            ↶
+          </button>
+        </div>
+      </section>
+
+      <!-- Main Flashcard Stage -->
+      <section id="study-stage" class="study-stage">
+        <article id="flashcard" class="flashcard" tabindex="0" role="button" aria-label="Thẻ từ vựng, nhấn để lật">
+          <div class="card-meta">
+            <span id="card-badge" class="card-badge badge-new">TỪ MỚI</span>
+            <span id="card-group" class="card-group"></span>
+          </div>
+
+          <div class="card-front">
+            <h1 id="card-word" class="card-word"></h1>
+            <div class="card-subline">
+              <span id="card-pos" class="card-pos"></span>
+              <span id="card-ipa" class="card-ipa"></span>
+            </div>
+          </div>
+
+          <div id="card-divider" class="card-divider hidden"></div>
+
+          <div id="card-back" class="card-back hidden">
+            <p id="card-meaning" class="card-meaning"></p>
+            <p id="card-example" class="card-example"></p>
+            <p id="card-note" class="card-note"></p>
+          </div>
+
+          <div id="card-flip-hint" class="card-flip-hint">
+            Chạm thẻ hoặc nhấn <kbd>Space</kbd> để xem nghĩa
+          </div>
+        </article>
+
+        <!-- Action Buttons (always visible; tap card or press Space to reveal meaning) -->
+        <div class="action-bar">
+          <div id="actions-study" class="actions-grid">
+            <button id="btn-forgot" class="btn btn-danger btn-lg" type="button" title="Phím tắt: 1 hoặc Q">
+              <span class="btn-main-text">Quên</span>
+              <span id="forgot-sub" class="btn-sub-text">Lặp lại hôm nay</span>
+              <kbd>1</kbd>
+            </button>
+            <button id="btn-remembered" class="btn btn-success btn-lg" type="button" title="Phím tắt: 2 hoặc T">
+              <span class="btn-main-text">Thuộc</span>
+              <span id="remember-sub" class="btn-sub-text">→ Part 1 (10 ngày)</span>
+              <kbd>2</kbd>
+            </button>
+            <button id="btn-master-back" class="btn btn-master btn-lg" type="button" title="Chuyển thẳng sang Đã thuộc (3 hoặc M)">
+              <span class="btn-main-text">Chuyển thẳng Đã thuộc</span>
+              <kbd>3</kbd>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Empty / Completed State -->
+      <section id="study-empty" class="study-empty hidden">
+        <div class="empty-card">
+          <div id="empty-icon" class="empty-icon">✓</div>
+          <h2 id="empty-title" class="empty-title">Đã hoàn thành phiên hôm nay</h2>
+          <p id="empty-desc" class="empty-desc"></p>
+          <div id="empty-stats" class="empty-stats"></div>
+          <div id="empty-actions" class="empty-actions"></div>
+        </div>
+      </section>
+
+      <!-- Subtle Keyboard Shortcut Footer (Desktop) -->
+      <footer class="shortcut-hint" aria-hidden="true">
+        <span><kbd>Space</kbd> Lật thẻ</span>
+        <span><kbd>1</kbd> Quên</span>
+        <span><kbd>2</kbd> Thuộc</span>
+        <span><kbd>3</kbd> Đã thuộc</span>
+        <span><kbd>Z</kbd> Hoàn tác</span>
+      </footer>
+    </main>
+
+    <!-- VIEW 2: MANAGE & IMPORT SCREEN -->
+    <main id="view-manage" class="view" role="tabpanel" aria-labelledby="tab-manage">
+      <!-- Bucket Overview -->
+      <section class="section">
+        <div class="section-header">
+          <h2>Tổng quan kho từ</h2>
+          <span id="total-words-label" class="muted-text">0 từ</span>
+        </div>
+        <div class="bucket-grid">
+          <div class="bucket-card">
+            <span class="bucket-name">Từ mới</span>
+            <span id="count-new" class="bucket-count">0</span>
+            <span class="bucket-meta">Chưa học</span>
+          </div>
+          <div class="bucket-card">
+            <span id="label-bucket-p1" class="bucket-name">Chờ ôn Part 1 (10 ngày)</span>
+            <span id="count-wait10" class="bucket-count">0</span>
+            <span id="due-wait10" class="bucket-meta">Đến hạn: 0</span>
+          </div>
+          <div class="bucket-card">
+            <span id="label-bucket-p2" class="bucket-name">Chờ ôn Part 2 (30 ngày)</span>
+            <span id="count-wait30" class="bucket-count">0</span>
+            <span id="due-wait30" class="bucket-meta">Đến hạn: 0</span>
+          </div>
+          <div class="bucket-card">
+            <span class="bucket-name">Đã thuộc</span>
+            <span id="count-mastered" class="bucket-count">0</span>
+            <span class="bucket-meta">Hoàn thành</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Import Vocabulary -->
+      <section class="section">
+        <div class="section-header">
+          <h2>Nạp &amp; cập nhật danh sách từ</h2>
+        </div>
+        <div class="panel">
+          <p class="panel-desc">
+            Hỗ trợ file <code>.xlsx</code> (Excel), <code>.txt</code> (<code>|</code>), <code>.csv</code>, <code>.tsv</code> UTF-8 hoặc dán trực tiếp từ Excel/Google Sheets.<br />
+            Tự động nhận diện tiêu đề cột như <code>Word | Type | Pronounce | Meaning</code> hoặc <code>word | pos | meaning | example | ipa | note | group</code>.
+          </p>
+          <div class="import-options">
+            <select id="select-import-format" class="select-input" title="Chọn thứ tự cột khi file không có dòng tiêu đề">
+              <option value="auto">Tự động nhận diện cột</option>
+              <option value="word_pos_meaning">word | pos | meaning | example | ipa | note | group</option>
+              <option value="word_type_pronounce_meaning">Word | Type | Pronounce | Meaning</option>
+            </select>
+          </div>
+          <div class="btn-row">
+            <label class="btn btn-primary" for="file-import-txt">
+              Nạp file (.xlsx / .txt / .csv)
+              <input id="file-import-txt" type="file" accept=".xlsx,.txt,.csv,.tsv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/plain,text/csv,text/tab-separated-values" hidden />
+            </label>
+            <button id="btn-toggle-paste" class="btn btn-subtle" type="button">Dán từ Excel / Text</button>
+          </div>
+
+          <div id="paste-box" class="paste-box hidden">
+            <textarea id="paste-textarea" rows="6" placeholder="Dán trực tiếp từ Excel/Sheets (Tab) hoặc định dạng dấu |&#10;VD:&#10;Word	Type	Pronounce	Meaning&#10;abandon	v	ə'bændən	bỏ, từ bỏ"></textarea>
+            <div class="btn-row">
+              <button id="btn-import-paste" class="btn btn-primary btn-sm" type="button">Cập nhật từ văn bản</button>
+              <button id="btn-cancel-paste" class="btn btn-ghost btn-sm" type="button">Đóng</button>
+            </div>
+          </div>
+
+          <div id="import-report" class="import-report hidden" role="status"></div>
+        </div>
+      </section>
+
+      <!-- Study Order & Display Settings -->
+      <section class="section">
+        <div class="section-header">
+          <h2>Cấu hình học &amp; hiển thị</h2>
+        </div>
+        <div class="panel settings-panel">
+          <div class="setting-row">
+            <div class="setting-info">
+              <label for="input-new-quota">Số từ mới mỗi ngày</label>
+              <span class="muted-text">Mặc định 30 từ/ngày</span>
+            </div>
+            <div class="stepper">
+              <button type="button" class="stepper-btn" data-target="input-new-quota" data-delta="-5">−5</button>
+              <input id="input-new-quota" type="number" min="0" max="500" step="1" value="30" />
+              <button type="button" class="stepper-btn" data-target="input-new-quota" data-delta="5">+5</button>
+            </div>
+          </div>
+
+          <div class="setting-row">
+            <div class="setting-info">
+              <label for="input-review-quota">Số từ ôn lại mỗi ngày</label>
+              <span class="muted-text">Mặc định 20 từ/ngày</span>
+            </div>
+            <div class="stepper">
+              <button type="button" class="stepper-btn" data-target="input-review-quota" data-delta="-5">−5</button>
+              <input id="input-review-quota" type="number" min="0" max="500" step="1" value="20" />
+              <button type="button" class="stepper-btn" data-target="input-review-quota" data-delta="5">+5</button>
+            </div>
+          </div>
+
+          <div class="setting-row">
+            <div class="setting-info">
+              <label for="input-interval-1">Chu kỳ ôn lại Part 1 (ngày)</label>
+              <span class="muted-text">Sau khi thuộc từ mới (mặc định 10 ngày)</span>
+            </div>
+            <div class="stepper">
+              <button type="button" class="stepper-btn" data-target="input-interval-1" data-delta="-1">−1</button>
+              <input id="input-interval-1" type="number" min="1" max="365" step="1" value="10" />
+              <button type="button" class="stepper-btn" data-target="input-interval-1" data-delta="1">+1</button>
+            </div>
+          </div>
+
+          <div class="setting-row">
+            <div class="setting-info">
+              <label for="input-interval-2">Chu kỳ ôn lại Part 2 (ngày)</label>
+              <span class="muted-text">Sau khi thuộc Part 1 (mặc định 30 ngày)</span>
+            </div>
+            <div class="stepper">
+              <button type="button" class="stepper-btn" data-target="input-interval-2" data-delta="-5">−5</button>
+              <input id="input-interval-2" type="number" min="1" max="365" step="1" value="30" />
+              <button type="button" class="stepper-btn" data-target="input-interval-2" data-delta="5">+5</button>
+            </div>
+          </div>
+
+          <div class="setting-row">
+            <div class="setting-info">
+              <label for="select-new-order">Thứ tự học từ mới</label>
+              <span class="muted-text">Giữ đúng thứ tự file hoặc trộn ngẫu nhiên</span>
+            </div>
+            <select id="select-new-order" class="select-input">
+              <option value="sequential">Theo thứ tự danh sách</option>
+              <option value="random">Ngẫu nhiên</option>
+            </select>
+          </div>
+
+          <div class="setting-row">
+            <div class="setting-info">
+              <label for="select-forget30-rule">Khi bấm Quên ở Part 2</label>
+              <span class="muted-text">Mặc định đưa về kho Từ mới</span>
+            </div>
+            <select id="select-forget30-rule" class="select-input">
+              <option value="new">Đưa về kho Từ mới</option>
+              <option value="wait_10d">Quay lại chờ ôn Part 1</option>
+            </select>
+          </div>
+        </div>
+      </section>
+
+      <!-- Data Reset -->
+      <section class="section">
+        <div class="section-header">
+          <h2>Dữ liệu</h2>
+        </div>
+        <div class="panel">
+          <p class="panel-desc">
+            Tiến độ được tự động lưu ngay sau từng từ vào trình duyệt này.
+          </p>
+          <div class="btn-row">
+            <button id="btn-export-txt" class="btn btn-subtle" type="button">Xuất toàn bộ kho (.txt)</button>
+            <button id="btn-export-csv" class="btn btn-subtle" type="button">Xuất toàn bộ kho (.csv)</button>
+            <button id="btn-clear-all" class="btn btn-danger-outline" type="button">Xóa toàn bộ kho</button>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Toast notification -->
+  <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,15 @@
+# Mestar Eng — Danh sách từ vựng mẫu (UTF-8, phân tách bằng dấu |)
+# Cấu trúc: word | pos | meaning | example | ipa | note | group
+word | pos | meaning | example | ipa | note | group
+abandon | v | từ bỏ, bỏ rơi | He decided to abandon the outdated plan. | /əˈbændən/ | a + band + on | Core 01
+concise | adj | ngắn gọn, súc tích | Keep your summary concise and clear. | /kənˈsaɪs/ | trái nghĩa với verbose | Core 01
+consistent | adj | nhất quán, kiên trì | Consistent daily practice beats cramming. | /kənˈsɪstənt/ | consist + ent | Core 01
+deliberate | adj | có chủ ý, thận trọng | She made a deliberate effort to slow down. | /dɪˈlɪbərət/ | cũng là động từ: cân nhắc kỹ | Core 01
+essential | adj | thiết yếu, cốt lõi | Focus on the essential vocabulary first. | /ɪˈsenʃl/ | essence + ial | Core 01
+friction | n | sự ma sát, trở ngại | Remove friction so studying feels effortless. | /ˈfrɪkʃn/ | low friction = ít rào cản | Core 01
+momentum | n | đà tiến, động lực | Small wins build momentum over time. | /məˈmentəm/ | keep the momentum going | Core 01
+pragmatic | adj | thực tế, thực dụng | We chose a pragmatic solution for the MVP. | /præɡˈmætɪk/ | tập trung vào tính ứng dụng | Core 02
+retain | v | ghi nhớ, giữ lại | Spaced repetition helps you retain words longer. | /rɪˈteɪn/ | retention (n): khả năng lưu giữ | Core 02
+threshold | n | ngưỡng, ranh giới | Once you cross that threshold, reading gets easier. | /ˈθreʃhəʊld/ | ngưỡng cửa / mức tối thiểu | Core 02
+ubiquitous | adj | có mặt khắp nơi | Smartphones have become ubiquitous in daily life. | /juːˈbɪkwɪtəs/ | mọi lúc mọi nơi | Core 02
+versatile | adj | đa năng, linh hoạt | A versatile tool adapts to many workflows. | /ˈvɜːrsətl/ | linh hoạt trong nhiều tình huống | Core 02
