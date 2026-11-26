@@ -1,4 +1,4 @@
-const CACHE_NAME = 'mestar-eng-v1';
+const CACHE_NAME = 'mestar-eng-v3';
 const ASSETS = [
   './',
   './index.html',
